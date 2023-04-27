@@ -1,0 +1,28 @@
+//@version=4
+study("Support and Resistance Indicator", overlay=true)
+
+// Определяем переменные для определения уровней поддержки и сопротивления
+var float support_level = na
+var float resistance_level = na
+var int lookback = 20 // количество свечей, на которых мы анализируем уровни
+
+// Находим минимальные и максимальные значения за последние lookback свечей
+var float lowest = lowest(low, lookback)
+var float highest = highest(high, lookback)
+
+// Получаем цену Bitcoin
+btc_price = security("POLONIEX:MTAUSDT", timeframe.period, close)
+
+// Если текущая цена находится выше максимального значения за последние lookback свечей,
+// то это может быть уровень сопротивления
+if btc_price > highest
+    resistance_level := highest
+
+// Если текущая цена находится ниже минимального значения за последние lookback свечей,
+// то это может быть уровень поддержки
+if btc_price < lowest
+    support_level := lowest
+
+// Отрисовываем уровни поддержки и сопротивления на графике
+plot(support_level, color=color.green)
+plot(resistance_level, color=color.red)
